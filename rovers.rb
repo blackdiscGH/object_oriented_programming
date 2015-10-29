@@ -3,6 +3,8 @@ class Rover
 	attr_accessor :ycoord
 	attr_accessor :direction
 
+#@@num_of_rovers += 1
+
 		def initialize
 			# @xcoord = x
 			# @ycoord = y
@@ -33,8 +35,8 @@ class Rover
 			@moves_n_turns = Array.new
 			@moves_n_turns = line2.split('')
 
-			puts @starting_position
-			puts @moves_n_turns
+			# puts @starting_position
+			# puts @moves_n_turns
 
 		end
 
@@ -75,9 +77,9 @@ class Rover
 						when "W"
 							@xcoord = @xcoord.to_i - 1
 						when "E"
-							@ycoord = @ycoord.to_i - 1
-						when "S"
 							@xcoord = @xcoord.to_i + 1
+						when "S"
+							@ycoord = @ycoord.to_i - 1
 					end # End of Case
 				end # End of Case
 			end # End of Method Moves_n_turns
@@ -86,22 +88,108 @@ class Rover
 		def print_coord
 			puts "#{@xcoord} #{@ycoord} #{@direction}"
 		end 
+
+		def print_num_of_rovers
+			# @@num_of_rovers
+		end
+
 end
 	
 class Plateau
 	attr_accessor :x_size
 	attr_accessor :y_size
+
+	def initialize(xsize,ysize)
+		@x_size = xsize
+		@y_size = ysize
+	end
+
+
+	def init_plateau
+	
+		#print columns
+		@y_size.downto(1) { |y|
+
+			# print rows
+			1.upto(@x_size) { |x|
+			print " . "
+			}
+
+		print "\n"
+	}
+
+	end
+
+
+	def print_plateau(r1x,r1y,r1d,r2x,r2y,r2d)
+
+		#print columns
+		@y_size.downto(1) { |y|
+		
+			# print rows
+			1.upto(@x_size) { |x|
+				
+				if ( ((x == r1x.to_i) && (y == r1y.to_i)) || ((x == r2x.to_i) && (y ==r2y.to_i))  )
+					if ((x == r1x.to_i) && (y == r1y.to_i))
+						case r1d
+							when "N" 
+								print " ^ "
+							when "S" 
+								print " V "
+							when "W" 
+								print " < "
+							when "E" 
+								print " > "
+						end 
+					end
+
+					if ((x == r2x.to_i) && (y == r2y.to_i))
+						case r2d
+							when "N" 
+								print " ^ "
+							when "S" 
+								print " V "
+							when "W" 
+								print " < "
+							when "E" 
+								print " > "
+						end 
+					end
+
+				else
+					print " . "
+				end
+			}
+			print "\n"
+		}
+
+	end
+
 end
 
+puts "\e[H\e[2J"
+
+puts " *** 2 Rovers on Mars ***"
+puts "Version 1.0"
+puts "Avinash Jham"
+puts "\n\n\n"
+
+plateau = Plateau.new(10,10)
+plateau.init_plateau
+
+puts "\n\n\n"
 puts "Activating Rover 1"
 rover1 = Rover.new
 rover1.read_instruction
 rover1.moves_n_turns
 rover1.print_coord
 
+puts "\n\n\n"
 puts "Activating Rover 2"
 rover2 = Rover.new
 rover2.read_instruction
 rover2.moves_n_turns
 rover2.print_coord
+
+plateau.print_plateau(rover1.xcoord,rover1.ycoord,rover1.direction, rover2.xcoord,rover2.ycoord, rover2.direction)
 
